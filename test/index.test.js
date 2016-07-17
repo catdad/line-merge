@@ -5,6 +5,13 @@ var expect = require('chai').expect;
 var mod = require('../');
 
 describe('[index]', function() {
+    describe('#merge', function() {
+        it('merged two string together');
+        it('merged three strings together');
+        
+        it('detects and merges comments');
+    });
+    
     describe('#mergeRaw', function() {
         var ONE = [{ line: 'thing' }];
         var TWO = [{ line: 'stuff' }];
@@ -64,6 +71,14 @@ describe('[index]', function() {
                     .and.to.deep.equal(ONEC1[0].comments);    
             });
         });
-        
+    });
+    
+    describe('#tokenize', function() {
+        it('takes a string an returns an array');
+        it('saves comments in the token object');
+    });
+    
+    describe('#serialize', function() {
+        it('takes the tokenized array and returns a string');
     });
 });
