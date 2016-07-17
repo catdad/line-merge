@@ -7,11 +7,16 @@ var mod = require('../');
 describe('[index]', function() {
     describe('#merge', function() {
         it('merged two string together');
+        
         it('merged three strings together');
         
         it('detects and merges comments');
         
         it('converts crlf lines to ln in the output');
+        
+        it('always ends with one new line');
+        
+        it('adds one new line before every comment block');
     });
     
     describe('#mergeRaw', function() {
@@ -28,6 +33,8 @@ describe('[index]', function() {
             expect(merged[0]).to.deep.equal(ONE[0]);
             expect(merged[1]).to.deep.equal(TWO[0]);
         });
+        
+        it('merges three arrays into one');
         
         it('removes duplicates', function() {
             var merged = mod.mergeRaw(ONE, ONE);
