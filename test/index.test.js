@@ -36,6 +36,13 @@ describe('[index]', function() {
             expect(merged[0]).to.deep.equal(ONE[0]);
         });
         
+        it('removes duplicates with comments', function() {
+            var merged = mod.mergeRaw(ONEC1, ONEC1);
+            
+            expect(merged).to.be.an('array').and.to.have.lengthOf(1);
+            expect(merged[0]).to.deep.equal(ONEC1[0]);
+        });
+        
         it('merged comments', function() {
             var merged = mod.mergeRaw(ONEC1, ONEC2);
             

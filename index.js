@@ -48,32 +48,10 @@ function serialize(arr) {
     }, '');
 }
 
-function arraysEqual(a, b) {
-    if (!Array.isArray(a) || !Array.isArray(b)) {
-        return false;
-    }
-    
-    if (a === b) {
-        return true;
-    }
-    
-    if (a.length !== b.length) {
-        return false;
-    }
-
-    for (var i = 0, l = a.length; i < l; ++i) {
-        if (a[i] !== b[i]) {
-            return false;
-        }
-    }
-    
-    return true;
-}
-
 // for now, we will only merge two at a time
 // that should be all that is required here
 function mergeComments(first, second) {
-    if (arraysEqual(first, second)) {
+    if (_.isEqual(first, second)) {
         return first;
     }
     
@@ -82,7 +60,7 @@ function mergeComments(first, second) {
 
 function mergeIn(dest, source) {
     function find(token) {
-        return dest.find(function(destToken) {
+        return _.find(dest, function(destToken) {
             return destToken.line === token.line;
         });
     }
