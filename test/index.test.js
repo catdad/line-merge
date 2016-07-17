@@ -10,6 +10,8 @@ describe('[index]', function() {
         it('merged three strings together');
         
         it('detects and merges comments');
+        
+        it('converts crlf lines to ln in the output');
     });
     
     describe('#mergeRaw', function() {
