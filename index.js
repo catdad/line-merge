@@ -1,5 +1,7 @@
 /* jshint node: true */
 
+var _ = require('lodash');
+
 function clean(str) {
     str.replace(/(\r\n)+/g, '\n');
 }
@@ -46,24 +48,74 @@ function serialize(arr) {
     }, '');
 }
 
+function arraysEqual(a, b) {
+    if (!Array.isArray(a) || !Array.isArray(b)) {
+        return false;
+    }
+    
+    if (a === b) {
+        return true;
+    }
+    
+    if (a.length !== b.length) {
+        return false;
+    }
+
+    for (var i = 0, l = a.length; i < l; ++i) {
+        if (a[i] !== b[i]) {
+            return false;
+        }
+    }
+    
+    return true;
+}
+
+// for now, we will only merge two at a time
+// that should be all that is required here
+function mergeComments(first, second) {
+    if (arraysEqual(first, second)) {
+        return first;
+    }
+    
+    return [].concat(first).concat(second);
+}
+
 function mergeIn(dest, source) {
     function find(token) {
-        dest.find(function(destToken) {
+        return dest.find(function(destToken) {
             return destToken.line === token.line;
         });
     }
     
     source.forEach(function(token) {
+        var found = find(token);
         
+        if (found) {
+            if (token.comments || found.comments) {
+                found.comments = mergeComments(
+                    found.comments || [],
+                    token.comments || []
+                );
+            }
+        } else {
+            dest.push(token);
+        }
     });
+    
+    return dest;
+}
+
+function mergeRawInternal() {
+    var tokenized = [].slice.call(arguments).map(_.cloneDeep);
+
+    // TODO validation?
+    
+    return tokenized.reduce(mergeIn, []);
 }
 
 function mergeRaw() {
-    var tokenizedStrings = [].slice.call(arguments);
-    
-    // TODO validation?
-    
-    return tokenizedStrings.reduce(mergeIn, []);
+    var tokenized = [].slice.call(arguments).map(_.cloneDeep);
+    return mergeRawInternal.apply(undefined, tokenized);
 }
 
 function merge() {
@@ -71,7 +123,7 @@ function merge() {
     
     // TODO validate all are strings
     
-    var mergedTokens = mergeRaw.apply(undefined, strings.map(tokenize));
+    var mergedTokens = mergeRawInternal.apply(undefined, strings.map(tokenize));
     return serialize(mergedTokens);
 }
 
