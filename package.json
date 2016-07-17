@@ -17,5 +17,21 @@
   },
   "dependencies": {
     "lodash": "^4.13.1"
-  }
+  },
+  "directories": {
+    "test": "test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/catdad/line-merge.git"
+  },
+  "keywords": [
+    "merge",
+    "line",
+    "lines"
+  ],
+  "bugs": {
+    "url": "https://github.com/catdad/line-merge/issues"
+  },
+  "homepage": "https://github.com/catdad/line-merge#readme"
 }
