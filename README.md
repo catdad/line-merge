@@ -41,13 +41,13 @@ Takes any number of strings, and merges all the unique lines in each, resulting 
 
 ```javascript
 var fs = require('fs');
-var lineMerge = require('line-merge');
+var lines = require('line-merge');
 
 var file1 = fs.readFileSync('location/to/one/.gitignore', 'utf8');
 var file2 = fs.readFileSync('location/to/two/.gitignore', 'utf8');
 var file3 = fs.readFileSync('location/to/three/.gitignore', 'utf8');
 
-var merged = lineMerge.merge(file1, file2, file3);
+var merged = lines.merge(file1, file2, file3);
 
 fs.writeFileSync('location/to/merged/.gitingore', merged);
 ```
