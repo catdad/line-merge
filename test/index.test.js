@@ -1,16 +1,41 @@
 /* jshint node: true, mocha: true */
 
+var util = require('util');
 var expect = require('chai').expect;
 
 var mod = require('../');
 
 describe('[index]', function() {
     describe('#merge', function() {
-        it('merged two string together');
+        var ONE = 'thing';
+        var TWO = 'stuff';
+        var THREE = 'pineapples';
         
-        it('merged three strings together');
+        var ONEC1 = '# thing comment 1\nthing';
+        var ONEC2 = '# thing comment 2\nthing';
         
-        it('detects and merges comments');
+        it('merged two string together', function() {
+            var out = mod.merge(ONE, TWO);
+            expect(out).to.equal(
+                [ONE, TWO].join('\n') + '\n'
+            );
+        });
+        
+        it('merged three strings together', function() {
+            var out = mod.merge(ONE, TWO, THREE);
+            expect(out).to.equal(
+                [ONE, TWO, THREE].join('\n') + '\n'
+            );    
+        });
+        
+        it('detects and merges comments', function() {
+            var out = mod.merge(ONEC1, ONEC2);
+            expect(out).to.equal([
+                '# thing comment 1',
+                '# thing comment 2',
+                'thing'
+            ].join('\n') + '\n');
+        });
         
         it('converts crlf lines to ln in the output');
         
@@ -22,6 +47,7 @@ describe('[index]', function() {
     describe('#mergeRaw', function() {
         var ONE = [{ line: 'thing' }];
         var TWO = [{ line: 'stuff' }];
+        var THREE = [{ line: 'pineapples' }];
         
         var ONEC1 = [{ line: 'thing', comments: ['# thing comment 1'] }];
         var ONEC2 = [{ line: 'thing', comments: ['# thing comment 2'] }];

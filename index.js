@@ -3,7 +3,7 @@
 var _ = require('lodash');
 
 function clean(str) {
-    str.replace(/(\r\n)+/g, '\n');
+    return str.replace(/(\r\n)+/g, '\n');
 }
 
 function tokenize(str) {
@@ -13,14 +13,14 @@ function tokenize(str) {
     var tokens = [];
 
     str.split('\n').forEach(function(line) {
-        if (/^#/.test(token)) {
+        if (/^#/.test(line)) {
             // this is a comment, so save it
             comments.push(line);
             return;
         }
 
         var token = {
-            line: token
+            line: line
         };
 
         if (comments.length) {
@@ -32,7 +32,7 @@ function tokenize(str) {
 
         tokens.push(token);
     });
-
+    
     return tokens;
 }
 
@@ -40,12 +40,15 @@ function serialize(arr) {
     // lucky for us, we want a new line at the end (because git),
     // so we can go ahead and always add a new line
     return arr.reduce(function(str, token) {
-        if (token._comments) {
+        if (token.comments) {
             str += '\n' + token.comments.join('\n') + '\n';
         }
 
         str += token.line + '\n';
-    }, '');
+        return str;
+    }, '').trim() + '\n';
+    // in case the file starts with a comment, we will
+    // trim and add a new line at the end manually
 }
 
 // for now, we will only merge two at a time
@@ -55,7 +58,7 @@ function mergeComments(first, second) {
         return first;
     }
     
-    return [].concat(first).concat(second);
+    return first.concat(second);
 }
 
 function mergeIn(dest, source) {
@@ -79,7 +82,7 @@ function mergeIn(dest, source) {
             dest.push(token);
         }
     });
-    
+
     return dest;
 }
 
