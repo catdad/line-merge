@@ -14,6 +14,8 @@ describe('[index]', function() {
         var ONEC1 = '# thing comment 1\nthing';
         var ONEC2 = '# thing comment 2\nthing';
         
+        var ONECC = '# thing comment 1\n# this is the thing\nthing';
+        
         var TWOC1 = '# stuff comment 1\nstuff';
         
         var CRLF = util.format('%s\r\n%s\r\n%s', ONE, TWO, THREE);
@@ -32,7 +34,7 @@ describe('[index]', function() {
             );    
         });
         
-        it('detects and merges comments', function() {
+        it('detects and merges comments from multiple strings', function() {
             var out = mod.merge(ONEC1, ONEC2);
             expect(out).to.equal([
                 '# thing comment 1',
@@ -52,6 +54,11 @@ describe('[index]', function() {
         it('always ends with one new line', function() {
             var out = mod.merge(THREE);
             expect(out).to.equal(THREE + '\n');
+        });
+        
+        it('preserves multiple comments for the same line', function() {
+            var out = mod.merge(ONECC);
+            expect(out).to.equal(ONECC + '\n');
         });
         
         it('adds one new line before every comment block', function() {
@@ -141,8 +148,64 @@ describe('[index]', function() {
     });
     
     describe('#tokenize', function() {
-        it('takes a string an returns an array');
-        it('saves comments in the token object');
+        var ONE = 'thing';
+        var TWO = 'stuff';
+        var THREE = 'pineapples';
+        
+        var ONEC1 = '# thing comment 1\nthing';
+        var ONEC2 = '# thing comment 2\nthing';
+        
+        var ONECC = '# thing comment 1\n# this is the thing\nthing';
+        
+        var TWOC1 = '# stuff comment 1\nstuff';
+        
+        var CRLF = util.format('%s\r\n%s\r\n%s', ONE, TWO, THREE);
+        
+        it('takes a string an returns an array', function() {
+            var tokens = mod.tokenize(ONE);
+            expect(tokens).to.be.an('array').and.to.have.lengthOf(1);
+            expect(tokens[0]).to.have.property('line').and.to.equal(ONE);
+            expect(tokens[0]).to.have.all.keys(['line']);
+        });
+        
+        it('saves comments in the token object', function() {
+            var tokens = mod.tokenize(ONEC1);
+            expect(tokens).to.be.an('array').and.to.have.lengthOf(1);
+            expect(tokens[0]).to.have.all.keys(['line', 'comments']);
+
+            expect(tokens[0]).to.have.property('line').and.to.equal(ONE);
+            expect(tokens[0]).to.have.property('comments')
+                .and.to.be.an('array')
+                .and.to.have.property(0)
+                .and.to.equal('# thing comment 1');
+        });
+        
+        it('parses multiple comments for the same line from one string into one token', function() {
+            var tokens = mod.tokenize(ONECC);
+            
+            expect(tokens).to.be.an('array').and.to.have.lengthOf(1);
+            expect(tokens[0]).to.have.all.keys(['line', 'comments']);
+
+            expect(tokens[0]).to.have.property('line').and.to.equal(ONE);
+            
+            expect(tokens[0]).to.have.property('comments')
+                .and.to.be.an('array')
+                .and.to.have.lengthOf(2);
+            
+            expect(tokens[0].comments[0]).to.equal('# thing comment 1');
+            expect(tokens[0].comments[1]).to.equal('# this is the thing');
+        });
+        
+        it('parses crlf strings', function() {
+            var tokens = mod.tokenize(CRLF);
+            
+            expect(tokens).to.be.an('array').and.to.have.lengthOf(3);
+            
+            [ONE, TWO, THREE].forEach(function(val, idx) {
+                expect(tokens[idx]).to.have.property('line')
+                    .and.to.equal(val);
+            });
+        });
     });
     
     describe('#serialize', function() {
