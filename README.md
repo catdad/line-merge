@@ -58,10 +58,34 @@ You can also access the internals:
 
 Tokenize a single list string into an array.
 
+```javascript
+var tokens = line.tokenize('pineapples\ncherries');
+// [{ line: 'pineapples' }, { line: 'cherries' }]
+```
+
 #### **`serialize({Array} arr)`** → `{String}`
 
-Serialize a tokenizd array into a list string.
+Serialize a tokenized array into a list string.
+
+```javascript
+var output = line.serialize([
+    { line: 'pineapples' },
+    { line: 'cherries' }
+]);
+// 'pineapples\ncherries\n'
+```
+
+_Note that the output will always end in a new line._
 
 #### **`mergeRaw({Array} arr, ...)`** → `{Array}`
 
 Merges the nderlying tokenized array representation of the list files.
+
+```javascript
+var tokens = line.mergeRaw(
+    [{ line: 'pineapples' }, { line: 'apples' }],
+    [{ line: 'cherries' }, { line: 'apples' }]
+);
+
+// [{ line: 'pineapples' }, { line: 'apples' }, { line: 'cherries' }]
+```
