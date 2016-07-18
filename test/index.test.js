@@ -14,6 +14,10 @@ describe('[index]', function() {
         var ONEC1 = '# thing comment 1\nthing';
         var ONEC2 = '# thing comment 2\nthing';
         
+        var TWOC1 = '# stuff comment 1\nstuff';
+        
+        var CRLF = util.format('%s\r\n%s\r\n%s', ONE, TWO, THREE);
+        
         it('merged two string together', function() {
             var out = mod.merge(ONE, TWO);
             expect(out).to.equal(
@@ -37,11 +41,25 @@ describe('[index]', function() {
             ].join('\n') + '\n');
         });
         
-        it('converts crlf lines to ln in the output');
+        it('converts crlf lines to ln in the output', function() {
+            var out = mod.merge(CRLF);
+            var expectedOut = mod.merge(ONE, TWO, THREE);
+            
+            expect(out).to.equal(expectedOut);
+            expect(/\r\n/.test(out)).to.equal(false);
+        });
         
-        it('always ends with one new line');
+        it('always ends with one new line', function() {
+            var out = mod.merge(THREE);
+            expect(out).to.equal(THREE + '\n');
+        });
         
-        it('adds one new line before every comment block');
+        it('adds one new line before every comment block', function() {
+            var out = mod.merge(THREE, ONEC1, TWOC1);
+            
+            var matches = out.match(/\n\n#/g);
+            expect(matches).to.have.lengthOf(2);
+        });
     });
     
     describe('#mergeRaw', function() {
@@ -60,7 +78,14 @@ describe('[index]', function() {
             expect(merged[1]).to.deep.equal(TWO[0]);
         });
         
-        it('merges three arrays into one');
+        it('merges three arrays into one', function() {
+            var merged = mod.mergeRaw(ONE, TWO, THREE);
+            
+            expect(merged).to.be.an('array').and.to.have.lengthOf(3);
+            expect(merged[0]).to.deep.equal(ONE[0]);
+            expect(merged[1]).to.deep.equal(TWO[0]);
+            expect(merged[2]).to.deep.equal(THREE[0]);
+        });
         
         it('removes duplicates', function() {
             var merged = mod.mergeRaw(ONE, ONE);
