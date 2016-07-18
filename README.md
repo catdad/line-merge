@@ -63,6 +63,13 @@ var tokens = line.tokenize('pineapples\ncherries');
 // [{ line: 'pineapples' }, { line: 'cherries' }]
 ```
 
+Comments are determined as lines that start with `#`.
+
+```javascript
+var tokens = line.tokenize('# fruits\npineapples\ncherries');
+// [{ line: 'pineapples', comments: ['# fruits'] }, { line: 'cherries' }]
+```
+
 #### **`serialize({Array} arr)`** → `{String}`
 
 Serialize a tokenized array into a list string.
@@ -84,8 +91,8 @@ Merges the nderlying tokenized array representation of the list files.
 ```javascript
 var tokens = line.mergeRaw(
     [{ line: 'pineapples' }, { line: 'apples' }],
-    [{ line: 'cherries' }, { line: 'apples' }]
+    [{ line: 'cherries' }, { line: 'apples', comments: ['# not the company'] }]
 );
 
-// [{ line: 'pineapples' }, { line: 'apples' }, { line: 'cherries' }]
+// [{ line: 'pineapples' }, { line: 'apples', comments: ['# not the company'] }, { line: 'cherries' }]
 ```
