@@ -126,13 +126,13 @@ describe('[index]', function() {
         
         [{
             name: 'merges a comment line with a non-comment line',
-            result: mod.mergeRaw(ONEC1, ONE)
+            result: function() { return mod.mergeRaw(ONEC1, ONE); }
         }, {
             name: 'merges a non-comment line with a comment line',
-            result: mod.mergeRaw(ONE, ONEC1)
+            result: function() { return mod.mergeRaw(ONE, ONEC1); }
         }].forEach(function(t) {
             it(t.name, function() {
-                var merged = t.result;
+                var merged = t.result();
 
                 expect(merged).to.be.an('array').and.to.have.lengthOf(1);
 
@@ -209,6 +209,34 @@ describe('[index]', function() {
     });
     
     describe('#serialize', function() {
-        it('takes the tokenized array and returns a string');
+        var ONE = [{ line: 'thing' }];
+        var TWO = [{ line: 'stuff' }];
+        var THREE = [{ line: 'pineapples' }];
+        
+        var ONEC1 = [{ line: 'thing', comments: ['# thing comment 1'] }];
+        var ONEC2 = [{ line: 'thing', comments: ['# thing comment 2'] }];
+        
+        it('takes the tokenized array and returns a string', function() {
+            var out = mod.serialize(ONE);
+            expect(out).to.equal(ONE[0].line + '\n');
+        });
+        
+        it('print comments above the line', function() {
+            var out = mod.serialize(ONEC1);
+            expect(out).to.equal([
+                '# thing comment 1',
+                'thing'
+            ].join('\n') + '\n');
+        });
+        
+        it('prints a new line before comments', function() {
+            var out = mod.serialize([].concat(THREE).concat(ONEC1));
+            expect(out).to.equal([
+                'pineapples',
+                '',
+                '# thing comment 1',
+                'thing'
+            ].join('\n') + '\n');
+        });
     });
 });
