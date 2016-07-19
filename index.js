@@ -7,6 +7,7 @@ function clean(str) {
 }
 
 function tokenize(str) {
+    // TODO validate string
     str = clean(str);
     
     var comments = [];
@@ -37,6 +38,8 @@ function tokenize(str) {
 }
 
 function serialize(arr) {
+    // TODO validate string
+    
     // lucky for us, we want a new line at the end (because git),
     // so we can go ahead and always add a new line
     return arr.reduce(function(str, token) {
@@ -87,15 +90,15 @@ function mergeIn(dest, source) {
 }
 
 function mergeRawInternal() {
-    var tokenized = [].slice.call(arguments).map(_.cloneDeep);
-
-    // TODO validation?
-    
+    var tokenized = [].slice.call(arguments);
     return tokenized.reduce(mergeIn, []);
 }
 
 function mergeRaw() {
     var tokenized = [].slice.call(arguments).map(_.cloneDeep);
+    
+    // TODO validation?
+    
     return mergeRawInternal.apply(undefined, tokenized);
 }
 
