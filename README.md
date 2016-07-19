@@ -59,14 +59,14 @@ You can also access the internals:
 Tokenize a single list string into an array.
 
 ```javascript
-var tokens = line.tokenize('pineapples\ncherries');
+var tokens = lines.tokenize('pineapples\ncherries');
 // [{ line: 'pineapples' }, { line: 'cherries' }]
 ```
 
 Comments are determined as lines that start with `#`.
 
 ```javascript
-var tokens = line.tokenize('# fruits\npineapples\ncherries');
+var tokens = lines.tokenize('# fruits\npineapples\ncherries');
 // [{ line: 'pineapples', comments: ['# fruits'] }, { line: 'cherries' }]
 ```
 
@@ -75,7 +75,7 @@ var tokens = line.tokenize('# fruits\npineapples\ncherries');
 Serialize a tokenized array into a list string.
 
 ```javascript
-var output = line.serialize([
+var output = lines.serialize([
     { line: 'pineapples' },
     { line: 'cherries' }
 ]);
@@ -89,7 +89,7 @@ _Note that the output will always end in a new line._
 Merges the underlying tokenized array representation of the list files. It will merge all arrays passed into the method in order.
 
 ```javascript
-var tokens = line.mergeRaw(
+var tokens = lines.mergeRaw(
     [{ line: 'pineapples' }, { line: 'apples' }],
     [{ line: 'cherries' }, { line: 'apples', comments: ['# not the company'] }]
 );
