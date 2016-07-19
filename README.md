@@ -37,7 +37,7 @@ The main function you will care about is the `merge` function.
 
 #### **`merge({String} str, ...)`** → `{String}`
 
-Takes any number of strings, and merges all the unique lines in each, resulting in a single string containing all lines from the input strings.
+Takes any number of strings, and merges all the unique lines in each, resulting in a single string containing all lines from the input strings. It will merge all strings passed into the method in order.
 
 ```javascript
 var fs = require('fs');
@@ -86,7 +86,7 @@ _Note that the output will always end in a new line._
 
 #### **`mergeRaw({Array} arr, ...)`** → `{Array}`
 
-Merges the nderlying tokenized array representation of the list files.
+Merges the underlying tokenized array representation of the list files. It will merge all arrays passed into the method in order.
 
 ```javascript
 var tokens = line.mergeRaw(
