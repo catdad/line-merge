@@ -28,7 +28,7 @@ function tokenize(str) {
             // save comments on the token and reset
             // the comments array
             token.comments = comments;
-            comments = [''];
+            comments = [];
         }
 
         tokens.push(token);

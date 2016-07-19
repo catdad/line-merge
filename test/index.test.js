@@ -206,6 +206,21 @@ describe('[index]', function() {
                     .and.to.equal(val);
             });
         });
+        
+        it('contains comments only for lines with a comment above them', function() {
+            var IN = '# com\ncom\nno com\n# com 2\ncom 2';
+            var tokens = mod.tokenize(IN);
+            
+            expect(tokens).to.be.an('array').and.to.have.lengthOf(3);
+            
+            expect(tokens[0]).to.have.property('comments')
+                .and.to.be.an('array')
+                .and.to.have.lengthOf(1);
+            expect(tokens[1]).to.not.have.property('comments');
+            expect(tokens[2]).to.have.property('comments')
+                .and.to.be.an('array')
+                .and.to.have.lengthOf(1);
+        });
     });
     
     describe('#serialize', function() {
