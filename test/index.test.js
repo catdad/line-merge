@@ -67,6 +67,31 @@ describe('[index]', function() {
             var matches = out.match(/\n\n#/g);
             expect(matches).to.have.lengthOf(2);
         });
+        
+        [
+            null,
+            undefined,
+            NaN,
+            42,
+            {},
+            [],
+            function() {}
+        ].forEach(function(val) {
+            var str = val === undefined ? 'undefined' :
+                JSON.stringify(val) || val.toString();
+            
+            it('errors for invalid parameter value: ' + str, function() {
+                var msg = 'all merge parameters must be strings';
+                
+                expect(function() {
+                    mod.merge(val);
+                }).to.throw(TypeError, msg);
+            
+                expect(function() {
+                    mod.merge('string', 'more string', val);
+                }).to.throw(TypeError, msg);
+            });
+        });
     });
     
     describe('#mergeRaw', function() {
@@ -143,6 +168,31 @@ describe('[index]', function() {
                     .and.to.be.an('array')
                     .and.to.have.lengthOf(1)
                     .and.to.deep.equal(ONEC1[0].comments);    
+            });
+        });
+        
+        [
+            null,
+            undefined,
+            NaN,
+            42,
+            'string',
+            {},
+            function() {}
+        ].forEach(function(val) {
+            var str = val === undefined ? 'undefined' :
+                JSON.stringify(val) || val.toString();
+            
+            it('errors for invalid parameter value: ' + str, function() {
+                var msg = 'all mergeRaw parameters must be arrays';
+                
+                expect(function() {
+                    mod.mergeRaw(val);
+                }).to.throw(TypeError, msg);
+            
+                expect(function() {
+                    mod.mergeRaw(['string'], [], val);
+                }).to.throw(TypeError, msg);
             });
         });
     });
@@ -252,6 +302,32 @@ describe('[index]', function() {
                 '# thing comment 1',
                 'thing'
             ].join('\n') + '\n');
+        });
+        
+        [
+            null,
+            undefined,
+            NaN,
+            42,
+            'string',
+            {},
+            ['string'],
+            [42],
+            [null],
+            [{}, 'not object'],
+            function() {}
+        ].forEach(function(val) {
+            var str = val === undefined ? 'undefined' :
+                JSON.stringify(val) || val.toString();
+            
+            it('errors for invalid parameter value: ' + str, function() {
+                var msg = 'the serialize parameter must be an array of objects';
+                
+                expect(function() {
+                    mod.serialize(val);
+                }).to.throw(TypeError, msg);
+            
+            });
         });
     });
 });

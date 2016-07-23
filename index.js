@@ -2,6 +2,18 @@
 
 var _ = require('lodash');
 
+function validStrings(arr) {
+    return arr.every(_.isString);
+}
+
+function validArrays(arr) {
+    return arr.every(_.isArray);
+}
+
+function validObjectArray(arr) {
+    return _.isArray(arr) && arr.every(_.isPlainObject);
+}
+
 function clean(str) {
     return str.replace(/(\r\n)+/g, '\n');
 }
@@ -38,7 +50,9 @@ function tokenize(str) {
 }
 
 function serialize(arr) {
-    // TODO validate string
+    if (!validObjectArray(arr)) {
+        throw new TypeError('the serialize parameter must be an array of objects');
+    }
     
     // lucky for us, we want a new line at the end (because git),
     // so we can go ahead and always add a new line
@@ -97,6 +111,9 @@ function mergeRawInternal() {
 function mergeRaw() {
     var tokenized = [].slice.call(arguments).map(_.cloneDeep);
     
+    if (!validArrays(tokenized)) {
+        throw new TypeError('all mergeRaw parameters must be arrays');
+    }
     // TODO validation?
     
     return mergeRawInternal.apply(undefined, tokenized);
@@ -105,7 +122,9 @@ function mergeRaw() {
 function merge() {
     var strings = [].slice.call(arguments);
     
-    // TODO validate all are strings
+    if (!validStrings(strings)) {
+        throw new TypeError('all merge parameters must be strings');
+    }
     
     var mergedTokens = mergeRawInternal.apply(undefined, strings.map(tokenize));
     return serialize(mergedTokens);
