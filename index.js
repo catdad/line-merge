@@ -7,7 +7,7 @@ function validStrings(arr) {
 }
 
 function validArrays(arr) {
-    return arr.every(_.isArray);
+    return arr.every(validObjectArray);
 }
 
 function validObjectArray(arr) {
@@ -115,7 +115,7 @@ function mergeRaw() {
     var tokenized = [].slice.call(arguments).map(_.cloneDeep);
     
     if (!validArrays(tokenized)) {
-        throw new TypeError('all mergeRaw parameters must be arrays');
+        throw new TypeError('all mergeRaw parameters must be arrays of objects');
     }
     // TODO validation?
     

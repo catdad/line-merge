@@ -179,13 +179,17 @@ describe('[index]', function() {
             42,
             'string',
             {},
+            ['string'],
+            [42],
+            [null],
+            [{}, 'not object'],
             function() {}
         ].forEach(function(val) {
             var str = val === undefined ? 'undefined' :
                 JSON.stringify(val) || val.toString();
             
             it('errors for invalid parameter value: ' + str, function() {
-                var msg = 'all mergeRaw parameters must be arrays';
+                var msg = 'all mergeRaw parameters must be arrays of objects';
                 
                 expect(function() {
                     mod.mergeRaw(val);
