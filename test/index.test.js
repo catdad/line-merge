@@ -92,6 +92,7 @@ describe('[index]', function() {
                 }).to.throw(TypeError, msg);
             });
         });
+        
     });
     
     describe('#mergeRaw', function() {
@@ -195,6 +196,7 @@ describe('[index]', function() {
                 }).to.throw(TypeError, msg);
             });
         });
+        
     });
     
     describe('#tokenize', function() {
@@ -271,6 +273,28 @@ describe('[index]', function() {
                 .and.to.be.an('array')
                 .and.to.have.lengthOf(1);
         });
+        
+        [
+            null,
+            undefined,
+            NaN,
+            42,
+            {},
+            [],
+            function() {}
+        ].forEach(function(val) {
+            var str = val === undefined ? 'undefined' :
+                JSON.stringify(val) || val.toString();
+            
+            it('errors for invalid parameter value: ' + str, function() {
+                var msg = 'the tokenize parameter must be a string';
+                
+                expect(function() {
+                    mod.tokenize(val);
+                }).to.throw(TypeError, msg);
+            });
+        });
+        
     });
     
     describe('#serialize', function() {
@@ -326,8 +350,8 @@ describe('[index]', function() {
                 expect(function() {
                     mod.serialize(val);
                 }).to.throw(TypeError, msg);
-            
             });
         });
+        
     });
 });

@@ -19,7 +19,10 @@ function clean(str) {
 }
 
 function tokenize(str) {
-    // TODO validate string
+    if (!_.isString(str)) {
+        throw new TypeError('the tokenize parameter must be a string');
+    }
+
     str = clean(str);
     
     var comments = [];
